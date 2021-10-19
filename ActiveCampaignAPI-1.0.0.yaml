@@ -1,0 +1,858 @@
+---
+openapi: 3.0.0
+info:
+  title: ActiveCampaign API
+  description: This is a Contact API for Active Campaign Platform which allows to create, read, update and delete a contact.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://youraccountname.api-us1.com/api/3
+  description: ActiveCampaign API
+tags:
+- name: developers
+  description: Operations available to regular developers
+paths:
+  /contacts:
+    post:
+      tags:
+      - developers
+      summary: add an contact
+      description: Add a new Contact
+      operationId: addContact
+      requestBody:
+        description: Contact to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_422'
+  /contacts/{id}:
+    get:
+      tags:
+      - developers
+      summary: Retrieve a contact
+      description: |
+        Retrieve an existing contact
+      operationId: getContactByID
+      parameters:
+      - name: id
+        in: path
+        description: ID of the contact
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+    put:
+      tags:
+      - developers
+      summary: Update a contact
+      description: |
+        Update an existing contact
+      operationId: updateContactByID
+      parameters:
+      - name: id
+        in: path
+        description: ID of the contact to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+    delete:
+      tags:
+      - developers
+      summary: Delete a contact
+      description: |
+        Delete an existing contact
+      operationId: deleteContactByID
+      parameters:
+      - name: id
+        in: path
+        description: The contact id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+components:
+  schemas:
+    Contact:
+      type: object
+      properties:
+        contact:
+          $ref: '#/components/schemas/Contact_contact'
+    inline_response_201:
+      type: object
+      properties:
+        fieldValues:
+          type: array
+          example:
+          - contact: 113
+            field: 1
+            value: The Value for First Field
+            cdate: 2020-08-01T10:54:59-05:00
+            update: 2020-08-01T14:13:34-05:00
+            links:
+            - owner: https://:account.api-us1.com/api/3/fieldValues/11797/owner
+            - field: https://:account.api-us1.com/api/3/fieldValues/11797/field
+            id: 11797
+            owner: 113
+          - contact: 113
+            field: 6
+            value: 2008-01-20
+            cdate: 2020-08-01T10:54:59-05:00
+            update: 2020-08-01T14:13:34-05:00
+            links:
+            - owner: https://:account.api-us1.com/api/3/fieldValues/11797/owner
+            - field: https://:account.api-us1.com/api/3/fieldValues/11797/field
+            id: 11798
+            owner: 113
+          items:
+            $ref: '#/components/schemas/inline_response_201_fieldValues'
+        contact:
+          $ref: '#/components/schemas/inline_response_201_contact'
+    inline_response_404:
+      type: object
+      properties:
+        message:
+          type: string
+          example: No Result found for Subscriber with id 1
+    inline_response_422:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_422_errors'
+    inline_response_200:
+      type: object
+      properties:
+        contactAutomations:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_contactAutomations'
+        contactLists:
+          $ref: '#/components/schemas/inline_response_200_contactLists'
+        deals:
+          $ref: '#/components/schemas/inline_response_200_deals'
+        fieldValues:
+          $ref: '#/components/schemas/inline_response_200_fieldValues'
+        geoAddresses:
+          $ref: '#/components/schemas/inline_response_200_geoAddresses'
+        geoIps:
+          $ref: '#/components/schemas/inline_response_200_geoIps'
+        contact:
+          $ref: '#/components/schemas/inline_response_200_contact'
+    inline_response_200_1:
+      type: object
+      properties:
+        message:
+          type: object
+    inline_response_404_1:
+      type: object
+      properties:
+        message:
+          type: string
+          example: No result found for contact with id 1
+    Contact_contact_fieldValues:
+      type: object
+      properties:
+        field:
+          type: integer
+        value:
+          type: string
+    Contact_contact:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          type: string
+          example: johndoe@example.com
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        phone:
+          type: integer
+          example: 7223224241
+        fieldValues:
+          type: array
+          example:
+          - field: 1
+            value: The Value for First Field
+          - field: 6
+            value: 2008-01-20
+          items:
+            $ref: '#/components/schemas/Contact_contact_fieldValues'
+    inline_response_201_links:
+      type: object
+      properties:
+        owner:
+          type: string
+        field:
+          type: string
+    inline_response_201_fieldValues:
+      type: object
+      properties:
+        contact:
+          type: string
+        field:
+          type: string
+        value:
+          type: string
+        cdate:
+          type: string
+        update:
+          type: string
+        links:
+          $ref: '#/components/schemas/inline_response_201_links'
+        id:
+          type: string
+        owner:
+          type: string
+    inline_response_201_contact_links:
+      type: object
+      properties:
+        bounceLogs:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/bounceLogs
+        contactAutomations:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/contactAutomations
+        contactData:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/contactData
+        contactGoals:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/contactGoals
+        contactLists:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/contactLists
+        contactLogs:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/contactLogs
+        contactTags:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/contactTags
+        contactDeals:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/contactDeals
+        deals:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/deals
+        fieldValues:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/fieldValues
+        geoIps:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/geoIps
+        notes:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/notes
+        organization:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/organization
+        plusAppend:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/plusAppend
+        trackingLogs:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/trackingLogs
+        scoreValues:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contacts/113/scoreValues
+    inline_response_201_contact:
+      type: object
+      properties:
+        email:
+          type: string
+          example: johndoe@example.com
+        cdate:
+          type: string
+          example: 2018-09-28T13:50:41-05:00
+        udate:
+          type: string
+          example: 2018-09-28T13:50:41-05:00
+        orgid:
+          type: string
+          example: ""
+        links:
+          $ref: '#/components/schemas/inline_response_201_contact_links'
+        id:
+          type: string
+          example: "113"
+        organization:
+          type: string
+          example: ""
+    inline_response_422_source:
+      type: object
+      properties:
+        pointer:
+          type: string
+          example: /data/attributes/email
+    inline_response_422_errors:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Email address already exists in the system
+        detail:
+          type: string
+          example: ""
+        code:
+          type: string
+          example: duplicate
+        source:
+          $ref: '#/components/schemas/inline_response_422_source'
+    inline_response_200_links:
+      type: object
+      properties:
+        automation:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactAutomations/1/automation
+        contact:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactAutomations/1/contact
+        contactGoals:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactAutomations/1/contactGoals
+    inline_response_200_contactAutomations:
+      type: object
+      properties:
+        contact:
+          type: string
+          example: "1"
+        seriesid:
+          type: string
+          example: "1"
+        startid:
+          type: string
+          example: "0"
+        status:
+          type: string
+          example: "0"
+        adddate:
+          type: string
+          example: 1976-10-16T23:23:09-05:00
+        remdate:
+          type: string
+        timespan:
+          type: string
+        lastblock:
+          type: string
+          example: "0"
+        lastdate:
+          type: string
+          example: 1984-08-15T08:13:44-05:00
+        completedElements:
+          type: string
+          example: "0"
+        totalElements:
+          type: string
+          example: "0"
+        completed:
+          type: string
+          example: "0"
+        completeValue:
+          type: string
+          example: "100"
+        links:
+          $ref: '#/components/schemas/inline_response_200_links'
+        id:
+          type: string
+          example: "1"
+        automation:
+          type: string
+          example: "1"
+    inline_response_200_contactLists_links:
+      type: object
+      properties:
+        automation:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactLists/1/automation
+        list:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactLists/1/list
+        contact:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactLists/1/contact
+        form:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactLists/1/form
+        autosyncLog:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactLists/1/autosyncLog
+        campaign:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactLists/1/campaign
+        unsubscribeAutomation:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactLists/1/unsubscribeAutomation
+        message:
+          type: string
+          example: https://:account.api-us1.com/api/:version/contactLists/1/message
+    inline_response_200_contactLists:
+      type: object
+      properties:
+        contact:
+          type: string
+          example: "1"
+        list:
+          type: string
+          example: "1"
+        form:
+          type: string
+        seriesid:
+          type: string
+          example: "0"
+        sdate:
+          type: string
+        udate:
+          type: string
+        status:
+          type: string
+          example: "1"
+        responder:
+          type: string
+          example: "1"
+        sync:
+          type: string
+          example: "0"
+        unsubreason:
+          type: string
+        campaign:
+          type: string
+        message:
+          type: string
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        ip4Sub:
+          type: string
+          example: "0"
+        sourceid:
+          type: string
+          example: "0"
+        autosyncLog:
+          type: string
+        ip4_last:
+          type: string
+          example: "0"
+        ip4Unsub:
+          type: string
+          example: "0"
+        unsubscribeAutomation:
+          type: string
+        links:
+          $ref: '#/components/schemas/inline_response_200_contactLists_links'
+        id:
+          type: string
+          example: "1"
+        automation:
+          type: string
+    inline_response_200_deals_links:
+      type: object
+      properties:
+        activities:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/activities
+        contact:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/contact
+        contactDeals:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/contactDeals
+        group:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/group
+        nextTask:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/nextTask
+        notes:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/notes
+        organization:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/organization
+        owner:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/owner
+        scoreValues:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/scoreValues
+        stage:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/stage
+        tasks:
+          type: string
+          example: https://:account.api-us1.com/api/:version/deals/1/tasks
+    inline_response_200_deals:
+      type: object
+      properties:
+        owner:
+          type: string
+          example: "1"
+        contact:
+          type: string
+          example: "1"
+        organization:
+          type: string
+        group:
+          type: string
+        title:
+          type: string
+          example: Consectetur omnis quo inventore molestiae ratione amet.
+        nexttaskid:
+          type: string
+          example: "0"
+        currency:
+          type: string
+          example: USD
+        status:
+          type: string
+          example: "0"
+        links:
+          $ref: '#/components/schemas/inline_response_200_deals_links'
+        id:
+          type: string
+          example: "1"
+        nextTask:
+          type: string
+    inline_response_200_fieldValues_links:
+      type: object
+      properties:
+        owner:
+          type: string
+          example: https://:account.api-us1.com/api/:version/fieldValues/1/owner
+        field:
+          type: string
+          example: https://:account.api-us1.com/api/:version/fieldValues/1/field
+    inline_response_200_fieldValues:
+      type: object
+      properties:
+        contact:
+          type: string
+          example: "1"
+        field:
+          type: string
+          example: "1"
+        value:
+          type: string
+        cdate:
+          type: string
+          example: 1981-05-16T19:02:29-05:00
+        udate:
+          type: string
+          example: 1975-11-08T10:31:45-06:00
+        links:
+          $ref: '#/components/schemas/inline_response_200_fieldValues_links'
+        id:
+          type: string
+          example: "1"
+        owner:
+          type: string
+          example: "1"
+    inline_response_200_geoAddresses:
+      type: object
+      properties:
+        ip4:
+          type: string
+          example: "823"
+        country2:
+          type: string
+          example: AS
+        country:
+          type: string
+          example: Suriname
+        state:
+          type: string
+          example: KY
+        city:
+          type: string
+          example: North Arnoldomouth
+        zip:
+          type: string
+          example: 38704-6592
+        area:
+          type: string
+          example: "0"
+        lat:
+          type: string
+          example: "-70.160407"
+        lon:
+          type: string
+          example: "-102.229406"
+        tz:
+          type: string
+          example: Europe/Chisinau
+        tstamp:
+          type: string
+          example: 1972-03-16T07:26:58-06:00
+        links:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+          example: "1"
+    inline_response_200_geoIps_links:
+      type: object
+      properties:
+        geoAddress:
+          type: string
+          example: https://:account.api-us1.com/api/:version/geoIps/1/geoAddress
+        id:
+          type: string
+          example: "1"
+    inline_response_200_geoIps:
+      type: object
+      properties:
+        contact:
+          type: string
+          example: "1"
+        campaignid:
+          type: string
+          example: "1"
+        messageid:
+          type: string
+          example: "1"
+        geoaddrid:
+          type: string
+          example: "1"
+        ip4:
+          type: string
+          example: "0"
+        tstamp:
+          type: string
+          example: 1988-08-05T11:50:51-05:00
+        geoAddress:
+          type: string
+          example: "1"
+        links:
+          $ref: '#/components/schemas/inline_response_200_geoIps_links'
+    inline_response_200_contact_links:
+      type: object
+      properties:
+        bounceLogs:
+          type: string
+          example: /1/bounceLogs
+        contactAutomations:
+          type: string
+          example: /1/contactAutomations
+        contactData:
+          type: string
+          example: /1/contactData
+        contactGoals:
+          type: string
+          example: /1/contactGoals
+        contactLists:
+          type: string
+          example: /1/contactLists
+        contactLogs:
+          type: string
+          example: /1/contactLogs
+        contactTags:
+          type: string
+          example: /1/contactTags
+        contactDeals:
+          type: string
+          example: /1/contactDeals
+        deals:
+          type: string
+          example: /1/deals
+        fieldValues:
+          type: string
+          example: /1/fieldValues
+        geoIps:
+          type: string
+          example: /1/geoIps
+        notes:
+          type: string
+          example: /1/notes
+        organization:
+          type: string
+          example: /1/organization
+        plusAppend:
+          type: string
+          example: /1/plusAppend
+        trackingLogs:
+          type: string
+          example: /1/trackingLogs
+        scoreValues:
+          type: string
+          example: /1/scoreValues
+    inline_response_200_contact:
+      type: object
+      properties:
+        cdate:
+          type: string
+          example: 2007-05-05T12:49:09-05:00
+        email:
+          type: string
+          example: selmer.koss@example.com
+        phone:
+          type: string
+          example: ""
+        firstName:
+          type: string
+          example: Charles
+        lastName:
+          type: string
+          example: Reynolds
+        orgid:
+          type: string
+          example: "0"
+        segmentio_id:
+          type: string
+          example: ""
+        bounced_hard:
+          type: string
+          example: "0"
+        bounced_soft:
+          type: string
+          example: "0"
+        bounced_date:
+          type: string
+        ip:
+          type: string
+          example: "0"
+        ua:
+          type: string
+        hash:
+          type: string
+          example: ""
+        socialdata_lastcheck:
+          type: string
+        email_local:
+          type: string
+          example: ""
+        email_domain:
+          type: string
+          example: ""
+        sentcnt:
+          type: string
+          example: "0"
+        rating_tstamp:
+          type: string
+        gravatar:
+          type: string
+          example: "0"
+        deleted:
+          type: string
+          example: "0"
+        adate:
+          type: string
+        udate:
+          type: string
+        edate:
+          type: string
+        contactAutomations:
+          type: array
+          items:
+            type: string
+            example: "1"
+        contactLists:
+          type: array
+          items:
+            type: string
+            example: "1"
+        fieldValues:
+          type: array
+          items:
+            type: string
+            example: "1"
+        geoIps:
+          type: array
+          items:
+            type: string
+            example: "1"
+        deals:
+          type: array
+          items:
+            type: string
+            example: "1"
+        accountContacts:
+          type: array
+          items:
+            type: string
+            example: "1"
+        links:
+          $ref: '#/components/schemas/inline_response_200_contact_links'
+        id:
+          type: string
+          example: "1"
+        organization:
+          type: string
